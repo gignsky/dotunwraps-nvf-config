@@ -3,6 +3,8 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
     nvf.url = "github:notashelf/nvf";
+    dotunwrap-nixos-config.url = "github:dotunwrap/nixos-config";
+    home-manager.follows = "dotunwrap-nixos-config/nixpkgs";
   };
 
   outputs =
