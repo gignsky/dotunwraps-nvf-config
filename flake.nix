@@ -32,5 +32,31 @@
           packages.default = nvimConfig.neovim;
           formatter = pkgs.alejandra;
         };
+      flake = {
+        homeManagerModules.default = { config, lib, pkgs, ... }: {
+          options.programs.unwrap-vim = {
+            enable = lib.mkEnableOption "dotunwrap's Neovim configuration";
+            
+            package = lib.mkOption {
+              type = lib.types.package;
+              description = "The Neovim package to use";
+              default = inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.default;
+            };
+          };
+
+          config = lib.mkIf config.programs.unwrap-vim.enable {
+            home.packages = [ config.programs.unwrap-vim.package ];
+            
+            # Optional: Set as default editor
+            home.sessionVariables = {
+              EDITOR = lib.mkDefault "${config.programs.unwrap-vim.package}/bin/nvim";
+              VISUAL = lib.mkDefault "${config.programs.unwrap-vim.package}/bin/nvim";
+            };
+          };
+        };
+
+        # Alias for convenience
+        homeManagerModules.unwrap-vim = inputs.self.homeManagerModules.default;
+      };
     };
 }
